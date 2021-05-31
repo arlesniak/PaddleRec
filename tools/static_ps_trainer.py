@@ -139,10 +139,9 @@ class Main(object):
 
             model_dir = "{}/{}".format(save_model_path, epoch)
             if self.pure_bf16:
-                paddle.fluid.io.save_inference_model(
-                    self.exe, model_dir,
-                    [feed.name for feed in self.input_data],
-                    self.inference_target_var)
+                paddle.static.save_inference_model(model_dir,
+                                                   [feed.name for feed in self.input_data],
+                                                   [self.inference_target_var], self.exe)
             elif fleet.is_first_worker() and save_model_path and is_distributed_env():
                 fleet.save_inference_model(
                     self.exe, model_dir,
