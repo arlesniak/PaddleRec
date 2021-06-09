@@ -138,15 +138,15 @@ class Main(object):
             self.train_result_dict["speed"].append(epoch_speed)
 
             model_dir = "{}/{}".format(save_model_path, epoch)
-            if self.pure_bf16:
-                paddle.static.save_inference_model(model_dir,
-                                                   [feed.name for feed in self.input_data],
-                                                   [self.inference_target_var], self.exe)
-            elif fleet.is_first_worker() and save_model_path and is_distributed_env():
+            if fleet.is_first_worker() and save_model_path and is_distributed_env():
                 fleet.save_inference_model(
                     self.exe, model_dir,
                     [feed.name for feed in self.input_data],
                     self.inference_target_var)
+            else:
+                paddle.fluid.io.save_inference_model(model_dir,
+                                                   [feed.name for feed in self.input_data],
+                                                   [self.inference_target_var], self.exe)
 
     def init_reader(self):
         if fleet.is_server():
