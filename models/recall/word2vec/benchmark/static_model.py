@@ -197,15 +197,7 @@ class StaticModel(object):
         if pure_bf16:
             optimizer = paddle.static.amp.bf16.decorate_bf16(
                 optimizer,
-                amp_lists=paddle.static.amp.bf16.AutoMixedPrecisionListsBF16(
-                    custom_fp32_list={
-                        'elementwise_pow',
-                        'floor',
-                        'scale',
-                        'fill_constant',
-                        # 'matmul',
-                    }
-                ),
+                amp_lists=paddle.static.amp.bf16.AutoMixedPrecisionListsBF16(),
                 use_bf16_guard=False,
                 use_pure_bf16=pure_bf16)
 
